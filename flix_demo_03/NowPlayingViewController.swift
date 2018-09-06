@@ -17,30 +17,21 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
     var movies: [[String:Any]] = []
     var refreshControl:UIRefreshControl!
     var networkConnection = false
+    var alertController = UIAlertController()
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), for: UIControlEvents.valueChanged)
         tableView.insertSubview(refreshControl, at: 0)
         
         tableView.dataSource = self
         fetchMovie()
+
     }
-    
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(animated)
-//        
-//        if(self.movies.isEmpty){
-//            let alertController = UIAlertController(title: "Foo", message: "Bar", preferredStyle: .alert)
-//            
-//            alertController.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-//            present(alertController, animated: true, completion: nil)
-//        }
-//
-//    }
+
     
     func refreshControlAction(_ refreshControl: UIRefreshControl){
         fetchMovie()
@@ -62,13 +53,26 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
             // This will run when the network request returns
             if let error = error {
                 print(error.localizedDescription)
+                
+                self.alertController = UIAlertController(title: "Error", message: "\(error.localizedDescription)", preferredStyle: .alert)
+                let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
+                    // handle cancel response here. Doing nothing will dismiss the view.
+                }
+                self.alertController.addAction(cancelAction)
+               DispatchQueue.global().async(execute: {
+                    DispatchQueue.main.sync{
+                        self.present(self.alertController, animated: true, completion: nil)
 
+                    }
+                })
+            
             } else if let data = data {
+
                 let dataDictionary = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
                 let movies = dataDictionary["results"] as! [[String:Any]]
                 self.movies = movies
-                self.tableView.reloadData()
                 self.refreshControl.endRefreshing()
+                self.tableView.reloadData()
                 
             }
         }
@@ -103,6 +107,5 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
         
         return cell
     }
-
 
 }

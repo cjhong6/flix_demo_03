@@ -391,6 +391,7 @@
 				A40C5AC6213786A8001590F3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
