@@ -25,9 +25,14 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <searchBar key="tableHeaderView" contentMode="redraw" id="hgg-DX-mGD">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                    <textInputTraits key="textInputTraits"/>
+                                </searchBar>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MovieCell" rowHeight="143" id="esS-5T-vTG" customClass="MovieCell" customModule="flix_demo_03" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="414" height="143"/>
+                                        <rect key="frame" x="0.0" y="72" width="414" height="143"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="esS-5T-vTG" id="Vdu-3b-FY5">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="142.5"/>
@@ -66,6 +71,7 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <connections>
+                        <outlet property="searchBar" destination="hgg-DX-mGD" id="47i-TW-i6x"/>
                         <outlet property="tableView" destination="xW5-Vf-lUd" id="dBd-2h-2YY"/>
                     </connections>
                 </viewController>

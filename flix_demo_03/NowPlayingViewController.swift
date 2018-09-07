@@ -10,19 +10,22 @@ import UIKit
 import AlamofireImage
 import MBProgressHUD
 
-class NowPlayingViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class NowPlayingViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
 
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var searchBar: UISearchBar!
     
     var movies: [[String:Any]] = []
     var refreshControl:UIRefreshControl!
-    var networkConnection = false
     var alertController = UIAlertController()
+    var filteredData: [[String:Any]] = []
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        searchBar.delegate = self
+        
         refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), for: UIControlEvents.valueChanged)
         tableView.insertSubview(refreshControl, at: 0)
@@ -41,16 +44,13 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
         let url = URL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed")!
         let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
         
-        // Display HUD right before the request is made
         MBProgressHUD.showAdded(to: self.view, animated: true)
         
         let session = URLSession(configuration: .default, delegate: nil, delegateQueue: OperationQueue.main)
         let task = session.dataTask(with: request) { (data, response, error) in
             
-        // Hide HUD once the network request comes back (must be done on main UI thread)
         MBProgressHUD.hide(for: self.view, animated: true)
-            
-            // This will run when the network request returns
+
             if let error = error {
                 print(error.localizedDescription)
                 
@@ -71,6 +71,7 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
                 let dataDictionary = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
                 let movies = dataDictionary["results"] as! [[String:Any]]
                 self.movies = movies
+                self.filteredData = self.movies
                 self.refreshControl.endRefreshing()
                 self.tableView.reloadData()
                 
@@ -86,13 +87,13 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
         
-        return movies.count
+        return self.filteredData.count
     }
 
 
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
         let cell = tableView.dequeueReusableCell(withIdentifier: "MovieCell", for: indexPath) as! MovieCell
-        let movie = movies[indexPath.row]
+        let movie = self.filteredData[indexPath.row]
         let title = movie["title"] as! String
         let overview = movie["overview"] as! String
         
@@ -106,6 +107,14 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource, UITable
         cell.posterImageView.af_setImage(withURL: posterURL)
         
         return cell
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        filteredData = searchText.isEmpty ? movies : movies.filter { (movie: [String:Any]) -> Bool in
+            return (movie["title"] as! String).range(of: searchText, options: .caseInsensitive) != nil
+        }
+        
+        tableView.reloadData()
     }
 
 }
