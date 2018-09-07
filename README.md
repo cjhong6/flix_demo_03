@@ -16,7 +16,7 @@ The following **required** user stories are complete:
 The following **stretch** user stories are implemented:
 
 - [x] User sees an alert when there's a networking error (+1pt)
-- [ ] User can search for a movie (+3pt)
+- [x] User can search for a movie (+3pt)
 - [ ] While poster is being fetched, user see's a placeholder image (+1pt)
 - [ ] User sees image transition for images coming from network, not when it is loaded from cache (+1pt)
 - [ ] Customize the selection effect of the cell (+1pt)
@@ -35,7 +35,7 @@ Please list two areas of the assignment you'd like to **discuss further with you
 
 Here's a walkthrough of implemented user stories:
 
-![demo](https://user-images.githubusercontent.com/15274466/45066944-a1fa5580-b075-11e8-93af-07076d1201a7.gif)
+![demo](https://user-images.githubusercontent.com/15274466/45200242-bc266600-b224-11e8-9b68-bf077a2fa5b6.gif)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
